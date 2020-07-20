@@ -17,7 +17,7 @@ import java.util.Map;
  * @createTime 2020/7/19 16:38
  */
 @Slf4j
-public class DateBaseHelper {
+public class DataBaseHelper {
 
     //threadLocal可以理解为隔离线程的容器
     private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<>();
@@ -30,7 +30,7 @@ public class DateBaseHelper {
     // 本应该从properties文件中加载数据库配置，这里为了省事，就写死了
     static {
         DRIVER = "com.mysql.cj.jdbc.Driver";
-        URL = "jdbc:mysql://localhost:3306/demo";
+        URL = "jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC";
         USERNAME = "root";
         PASSWORD = "root";
 
@@ -99,7 +99,7 @@ public class DateBaseHelper {
      * @description 执行更新语句
      * @date: 2020/7/19
      */
-    public static int executeUpdate(String sql, Object params) {
+    public static int executeUpdate(String sql, Object[] params) {
         int rows = 0;
         try {
             Connection connection = getConnection();
