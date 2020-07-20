@@ -84,7 +84,7 @@ public class DataBaseHelper {
         List<T> entityList;
         try {
             Connection connection = getConnection();
-            entityList = QUERY_RUNNER.query(connection, sql, new BeanListHandler<T>(entityClass), params);
+            entityList = QUERY_RUNNER.query(connection, sql, new BeanListHandler<T>(entityClass));
         } catch (SQLException e) {
             log.error("查询数据集合失败", e);
             throw new RuntimeException(e);
