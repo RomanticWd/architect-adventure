@@ -1,7 +1,8 @@
-package site.lgong.framework.utils;
+package site.lgong.framework.helper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.lgong.framework.common.ConfigConstant;
+import site.lgong.framework.utils.PropsUtil;
 
 import java.util.Properties;
 
