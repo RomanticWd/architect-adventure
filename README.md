@@ -9,3 +9,9 @@
 1. 使用WebServlet实现接口开发工作，这种开发方式一个接口就要对应一个servlet，随着业务的扩涨，servlet也会随之增多。这就诞生了后来的contreller，controller就是将同一个业务模块的servlet合并到一个类中，此类中包含了若干方法，每个方法处理一个特定的请求。
 而后续我们需要做的内容就是封装这样一个controller。
 2. 搭建一个smart-framework框架，实现类似于controller，service，resource等注解的功能。
+
+### 2020-07-21
+1. 定义properties工具类用于读取配置文件
+2. 定义类加载工具类用于加载指定class，指定包下的所有class
+3. 定义controller，service，inject，action等注解
+4. 增加获取应用包下所有Bean类的方法
