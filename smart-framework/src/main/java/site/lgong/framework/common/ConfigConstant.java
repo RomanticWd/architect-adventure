@@ -7,12 +7,12 @@ package site.lgong.framework.common;
  */
 public final class ConfigConstant {
 
-    private static final String CONFIG_FILE = "config.properties";
+    public static final String CONFIG_FILE = "config.properties";
 
-    private static final String JDBC_DRIVER = "jdbc.driver";
-    private static final String JDBC_URL = "jdbc.url";
-    private static final String JDBC_USERNAME = "jdbc.username";
-    private static final String JDBC_PASSWORD = "jdbc.password";
+    public static final String JDBC_DRIVER = "jdbc.driver";
+    public static final String JDBC_URL = "jdbc.url";
+    public static final String JDBC_USERNAME = "jdbc.username";
+    public static final String JDBC_PASSWORD = "jdbc.password";
 
-    private static final String APP_BASE_PACKAGE = "app.base_package";
+    public static final String APP_BASE_PACKAGE = "app.base_package";
 }
