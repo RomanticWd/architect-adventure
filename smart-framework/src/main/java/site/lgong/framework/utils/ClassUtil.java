@@ -36,7 +36,7 @@ public final class ClassUtil {
     }
 
     /**
-     * @param isInitialized 是否初始化，即是否执行类的静态代码块
+     * @param isInitialized 是否初始化，即是否执行类的静态代码块,设置为false可以提高类加载速度
      * @return Class
      * @description 加载类
      * @date: 2020/7/21
