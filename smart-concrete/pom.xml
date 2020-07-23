@@ -63,6 +63,13 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- spring-aop -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>5.2.6.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
