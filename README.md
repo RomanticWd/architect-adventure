@@ -22,3 +22,6 @@
 3. 加载所有controller类，并通过反射获取类中带有action注解的方法，进而获取action注解中的请求表达式，得到请求url与请求method，将此封装成一个request对象。同时将controller与action封装成一个handler对象，最终生成一个<request，handler>映射的大map。
 4. 定义一个入口程序，统一加载ClassHelper,BeanHelper,IocHelper,ControllerHelper。
 5. 定义一个dispatchServlet请求转发器，通过第四步的入口程序初始化框架中所有的helper，处理所有的请求，从httpServletRequest对象中获取请求方法与请求路径，然后根据第三步中的map从而知道调用哪个controller中的哪个方法。并从httpServletRequest中获取请求参数，并通过反射调用controller中的action注解修饰的方法。
+
+### 2020-07-23
+1. 三种代理模式：静态代理，JDK动态代理，CGLib动态代理，JDK动态代理与CGLib动态代理的区别在于CGLib类库可以代理没有接口的类，通过加载代理类的class文件，通过其字节码生成子类来处理。
