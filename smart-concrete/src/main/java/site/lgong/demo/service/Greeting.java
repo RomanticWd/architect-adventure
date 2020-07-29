@@ -9,4 +9,6 @@ public interface Greeting {
 
     void sayHello(String name);
 
+    void sayHelloError(String name);
+
 }

@@ -23,6 +23,11 @@ public class GreetingProxy implements Greeting {
         after();
     }
 
+    @Override
+    public void sayHelloError(String name) {
+
+    }
+
     private void before() {
         System.out.println("before");
     }
