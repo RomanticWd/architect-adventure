@@ -34,3 +34,37 @@
 5. 引入增强使用遇到的问题，希望后面的学习中可以解决下面的疑问
 * 原有的环绕增强失效了。
 * 同一段代码在debug模式与run模式打印的内容不同（在代码中留了todo）。
+
+### 2020-08-03
+1. 各类增强类型所对应的解决方案
+
+| 增强类型 | 基于AOP接口 | 基于AOP注解 | 基于`<aop:config>`配置 |
+|---|---|---|---|
+|Before Advice(前置增强)| MethodBeforeAdvice | @Before | `<aop:before>` |
+|After Advice(后置增强)| AfterReturningAdvice | @After | `<aop:after>` |
+|Around Advice(环绕增强)| MethodInterceptor | @Around | `<aop:around>` |
+|Throws Advice(抛出增强)| ThrowAdvice | @AfterThrowing | `<aop:aftaer-throwing>` |
+|Introduction Advice(引入增强)| DelegatingIntroductionInterceptor | @DeclareParents | `<aop:declare-parents>` |
+
+2. 既然CGLib可以代理任何类了，那为什么还要用JDK的动态代理呢？
+根据实际项目经验得知，CGLib创建代理的速度比较慢，但创建代理后运行的速度却非常快，而JDK动态代理正好相反。
+如果在运行的时候不断的用CGLib去创建代理，系统的性能就会大打折扣，所以建议一般在系统初始化的时候用CGLib去创建代理，并放入spring的ApplicationContext中以备后用。
+3. 定义一个切面注解Aspect，后续使用框架的时候可以通过此注解拦截方法。
+4. 定义代理接口Proxy，接口中只有一个方法doProxy（ProxyChain proxyChain），这里定义了一个链式代理，ProxyChain对象封装了doProxyChain方法，通过这个方法再去执行doProxy方法，将多个代理通过一条链子串起来，一个个的去执行，执行顺序取决于添加到链上的先后顺序。
+5. Proxy接口的实现类AspectProxy是一个抽象类，抽象类中定义了一些公共方法，而抽象类与接口的区别之一，就是抽象类的方法不需要全部实现，这样就可以在子类中有选择性的进行实现。这是一种模板设计模式。
+Aspect注解与AspectProxy抽象类使用示例：
+```java
+@Aspect(Controller.class)
+public class ControllerAspect extends AspectProxy {
+
+    @Override
+    public void before(Class<?> cls, Method method, Object[] params) throws Throwable {
+        System.out.println("-----begin------");
+    }
+
+    @Override
+    public void after(Class<?> cls, Method method, Object[] params, Object result) throws Throwable {
+        System.out.println("-----end------");
+    }
+}
+```
