@@ -1,9 +1,6 @@
 package site.lgong.framework;
 
-import site.lgong.framework.helper.BeanHelper;
-import site.lgong.framework.helper.ClassHelper;
-import site.lgong.framework.helper.ControllerHelper;
-import site.lgong.framework.helper.IocHelper;
+import site.lgong.framework.helper.*;
 import site.lgong.framework.utils.ClassUtil;
 
 /**
@@ -18,7 +15,8 @@ public final class HelperLoader {
      * @date: 2020/7/2
      */
     public static void init() {
-        Class<?>[] classList = {ClassHelper.class, BeanHelper.class, IocHelper.class, ControllerHelper.class};
+        //AopHelper需要在IocHelper之前加载，因为需要AopHelper获取代理对象，最后通过IocHelper进行依赖注入
+        Class<?>[] classList = {ClassHelper.class, BeanHelper.class, AopHelper.class, IocHelper.class, ControllerHelper.class};
         for (Class<?> aClass : classList) {
             ClassUtil.loadClass(aClass.getName(), false);
         }
