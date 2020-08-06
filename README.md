@@ -68,3 +68,10 @@ public class ControllerAspect extends AspectProxy {
     }
 }
 ```
+### 2020-08-06
+1. 获取所有继承AspectProxy的代理类，找出其中带有Aspect注解的代理类，如上面的ControllerAspect就是一个带有Aspect注解的类。
+2. 判断ControllerAspect类所带有的Aspect注解中的注解类属性是否是Aspect注解，如上面ControllerAspect类所带的Aspect注解的注解类属性是Controller注解。
+3. 获取带有Controller注解的所有类，这样就形成了一个代理类及其目标类集合之间的映射关系。即ControllerAspect代理类与所有带有Controller注解的目标类集合之间的映射关系。
+4. 再次循环反转，找出目标类与代理对象列表之间的映射关系。比如一个UserController使用了Controller注解，那么UserController就是目标类，ControllerAspect代理类会生成一个代理对象，而继承AspectProxy的类可能会存在多个，最终就会生成一个目标对象与代理对象之间的映射关系。
+5. 最终生成了一个目标类UserController的代理链（多个代理）对象ProxyChain。每个代理有自己的横切逻辑。
+6. 将这个代理对象放入Bean map中，最后由ioc进行依赖注入。后面再使用UserController中的方法时候就会生成一个代理对象，并执行代理对象的横切逻辑。
