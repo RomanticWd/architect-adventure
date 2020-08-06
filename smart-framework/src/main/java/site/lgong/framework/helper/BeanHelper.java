@@ -29,6 +29,14 @@ public final class BeanHelper {
     }
 
     /**
+     * @description 设置bean实例
+     * @date: 2020/8/6
+     */
+    public static void setBean(Class<?> cls, Object obj) {
+        BEAN_MAP.put(cls, obj);
+    }
+
+    /**
      * @return Map<Class < ?>, Object>
      * @description 获取所有的bean映射
      * @date: 2020/7/22

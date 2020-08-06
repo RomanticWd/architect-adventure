@@ -4,6 +4,7 @@ import site.lgong.framework.annotation.Controller;
 import site.lgong.framework.annotation.Service;
 import site.lgong.framework.utils.ClassUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,6 +76,36 @@ public final class ClassHelper {
         beanClassSet.addAll(getServiceClassSet());
         beanClassSet.addAll(getControllerClassSet());
         return beanClassSet;
+    }
+
+    /**
+     * @return Set<Class < ?>>
+     * @description 获取应用包下某父类（或接口）的所有子类（或实现类）
+     * @date: 2020/8/6
+     */
+    public static Set<Class<?>> getClassSetBySuper(Class<?> superClass) {
+        Set<Class<?>> classSet = new HashSet<>();
+        for (Class<?> cls : CLASS_SET) {
+            if (superClass.isAssignableFrom(cls) && !superClass.equals(cls)) {
+                classSet.add(cls);
+            }
+        }
+        return classSet;
+    }
+
+    /**
+     * @return Set<Class < ?>>
+     * @description 获取应用包下带有某注解的所有类
+     * @date: 2020/8/6
+     */
+    public static Set<Class<?>> getClassSetByAnnotation(Class<? extends Annotation> annotationClass) {
+        Set<Class<?>> classSet = new HashSet<>();
+        for (Class<?> cls : CLASS_SET) {
+            if (cls.isAnnotationPresent(annotationClass)) {
+                classSet.add(cls);
+            }
+        }
+        return classSet;
     }
 
 }
