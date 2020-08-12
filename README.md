@@ -87,57 +87,61 @@ public class ControllerAspect extends AspectProxy {
 4. ThreadLocal使用案例：
 在封装数据库的常用操作时候时长会这样实现，这就导致了多线程的情况下，所有线程共享一个连接，线程1有可能会关闭线程2的连接，从而线程2报错‘connection closed’。
 ```java
-private static Connection conn = null;
-//获取连接
-public static Connection getConection(){
-    try{
-        Class.forName(driver);
-        conn = DriverManager.getConnection(url,username,password);
-    } catch (Exception e) {
-        
-    }
-    return conn;
-}
-//关闭连接
-public static void closeConection(){
-    try{
-        if (conn != null) {
-            conn.close();
+public class DBUtil() {
+    private static Connection conn = null;
+    //获取连接
+    public static Connection getConection(){
+        try{
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url,username,password);
+        } catch (Exception e) {
+            
         }
-    } catch (Exception e) {
-        
+        return conn;
+    }
+    //关闭连接
+    public static void closeConection(){
+        try{
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            
+        }
     }
 }
 ```
 这时候就需要使用ThreadLocal进行封装, 将每个线程之间的connection进行个里，不再互相干扰。
-```java
-private static ThreadLocal<Connection> connContainer = new ThreadLocal<Connection>();
-//获取连接
-public static Connection getConection(){
-    Connection conn = connContainer.get();
-    try{
-        if (conn != null) {
-            Class.forName(driver);
-            conn = DriverManager.getConnection(url,username,password);
+```
+public class DBUtil() {
+    private static ThreadLocal<Connection> connContainer = new ThreadLocal<Connection>();
+    //获取连接
+    public static Connection getConection(){
+        Connection conn = connContainer.get();
+        try{
+            if (conn != null) {
+                Class.forName(driver);
+                conn = DriverManager.getConnection(url,username,password);
+            }
+        } catch (Exception e) {
+            
+        } finally {
+            connContainer.set(conn);
         }
-    } catch (Exception e) {
-        
-    } finally {
-        connContainer.set(conn);
+        return conn;
     }
-    return conn;
-}
-//关闭连接
-public static void closeConection(){
-    Connection conn = connContainer.get();
-    try{
-        if (conn != null) {
-            conn.close();
+    //关闭连接
+    public static void closeConection(){
+        Connection conn = connContainer.get();
+        try{
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            
+        } finally {
+            connContainer.remove(conn);
         }
-    } catch (Exception e) {
-        
-    } finally {
-        connContainer.remove(conn);
     }
 }
 ```
