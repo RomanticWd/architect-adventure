@@ -75,3 +75,69 @@ public class ControllerAspect extends AspectProxy {
 4. 再次循环反转，找出目标类与代理对象列表之间的映射关系。比如一个UserController使用了Controller注解，那么UserController就是目标类，ControllerAspect代理类会生成一个代理对象，而继承AspectProxy的类可能会存在多个，最终就会生成一个目标对象与代理对象之间的映射关系。
 5. 最终生成了一个目标类UserController的代理链（多个代理）对象ProxyChain。每个代理有自己的横切逻辑。
 6. 将这个代理对象放入Bean map中，最后由ioc进行依赖注入。后面再使用UserController中的方法时候就会生成一个代理对象，并执行代理对象的横切逻辑。
+
+### 2020-08-12
+1. ThreadLocal学习：ThreadLocal其实就是一个容器，用于存放线程的局部变量，不能因为它的命名而错误的理解。
+2. 在一个类中使用static成员变量时候，需要考虑线程安全的问题，即多个线程需要独享自己的static成员变量吗？补充一下static修饰变量时候的概念：static修饰的成员变量属于类，不属于某个对象（也就是说多个对象访问或修改static修饰的成员变量时，其中一个对象将static成员变量进行了修改，其它的对象的static成员变量值跟着改变，即多个对象共享同一个static成员变量）
+3. ThreadLocal的API：
+* public T get(): 从线程局部变量中获取值
+* public void set(T value)：将值放入线程局部变量中
+* public void remove()：从线程局部变量中移除值（有利于jvm垃圾回收）
+* protected T initialValue()：返回局部变量中的初始值（默认为null），initialValue方法是protected，是为了提醒程序员这个方法需要程序员实现，要给这个线程局部变量设置一个初始值
+4. ThreadLocal使用案例：
+在封装数据库的常用操作时候时长会这样实现，这就导致了多线程的情况下，所有线程共享一个连接，线程1有可能会关闭线程2的连接，从而线程2报错‘connection closed’。
+```java
+private static Connection conn = null;
+//获取连接
+public static Connection getConection(){
+    try{
+        Class.forName(driver);
+        conn = DriverManager.getConnection(url,username,password);
+    } catch (Exception e) {
+        
+    }
+    return conn;
+}
+//关闭连接
+public static void closeConection(){
+    try{
+        if (conn != null) {
+            conn.close();
+        }
+    } catch (Exception e) {
+        
+    }
+}
+```
+这时候就需要使用ThreadLocal进行封装, 将每个线程之间的connection进行个里，不再互相干扰。
+```java
+private static ThreadLocal<Connection> connContainer = new ThreadLocal<Connection>();
+//获取连接
+public static Connection getConection(){
+    Connection conn = connContainer.get();
+    try{
+        if (conn != null) {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url,username,password);
+        }
+    } catch (Exception e) {
+        
+    } finally {
+        connContainer.set(conn);
+    }
+    return conn;
+}
+//关闭连接
+public static void closeConection(){
+    Connection conn = connContainer.get();
+    try{
+        if (conn != null) {
+            conn.close();
+        }
+    } catch (Exception e) {
+        
+    } finally {
+        connContainer.remove(conn);
+    }
+}
+```
