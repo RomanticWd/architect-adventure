@@ -112,7 +112,7 @@ public class DBUtil() {
 }
 ```
 这时候就需要使用ThreadLocal进行封装, 将每个线程之间的connection进行个里，不再互相干扰。
-```
+```java
 public class DBUtil() {
     private static ThreadLocal<Connection> connContainer = new ThreadLocal<Connection>();
     //获取连接
@@ -145,3 +145,9 @@ public class DBUtil() {
     }
 }
 ```
+
+### 2020-08-24
+1. 增加Transaction注解
+2. 增加事务代理机制
+3. 疑问点：同一个线程中会有多个事务存在吗？
+理论上是没有的，因为事务代理机制中会判断当前线程中事务控制相关逻辑当前未在执行中且方法上加了Transaction注解，如果存在多个事务，就会导致某个事务可以生效，其他事务不能生效。
