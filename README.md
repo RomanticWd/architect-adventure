@@ -151,3 +151,11 @@ public class DBUtil() {
 2. 增加事务代理机制
 3. 疑问点：同一个线程中会有多个事务存在吗？
 理论上是没有的，因为事务代理机制中会判断当前线程中事务控制相关逻辑当前未在执行中且方法上加了Transaction注解，如果存在多个事务，就会导致某个事务可以生效，其他事务不能生效。
+
+### 2020-09-01
+1. 在框架中添加事务代理机制
+2. 增加DispatchServlet处理所有的请求，根据请求方法与请求路径来调用具体的action方法，并返回对应的值。
+3. Controller与ServletAPI解耦
+因为Controller中是无法调用Servlet API的，因为无法获取request与response这类对象，我们必须在dispatchServlet中将这些对象传递给Controller的Action方法才能拿到这些对象，这也会增加Controller与ServletAPI的耦合。
+这里提供一个线程安全的对象，通过它来封装request与response对象，并提供一系列常用的Servlet API，这样就可以在Controller中随时通过该对象操作Request与Response。
+这个对象要求一定是线程安全的，每个请求线程独自拥有一个Request与Response对象，不同请求线程之间是隔离的。
