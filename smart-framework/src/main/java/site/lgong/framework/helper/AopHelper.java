@@ -2,9 +2,11 @@ package site.lgong.framework.helper;
 
 import lombok.extern.slf4j.Slf4j;
 import site.lgong.framework.annotation.Aspect;
+import site.lgong.framework.annotation.Service;
 import site.lgong.framework.proxy.AspectProxy;
 import site.lgong.framework.proxy.Proxy;
 import site.lgong.framework.proxy.ProxyManager;
+import site.lgong.framework.proxy.TransactionProxy;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -64,6 +66,18 @@ public final class AopHelper {
     private static Map<Class<?>, Set<Class<?>>> createProxyMap() throws Exception {
         //代理类及其目标类集合之间的映射关系
         Map<Class<?>, Set<Class<?>>> proxyMap = new HashMap<>();
+        //添加普通切面代理
+        addAspectProxy(proxyMap);
+        //添加事务代理
+        addTransactionProxy(proxyMap);
+        return proxyMap;
+    }
+
+    /**
+     * @description 增加切面代理类和目标类
+     * @date: 2020/9/1
+     */
+    private static void addAspectProxy(Map<Class<?>, Set<Class<?>>> proxyMap) throws Exception {
         //获取所有扩展AspectProxy抽象类的代理类
         Set<Class<?>> proxyClassSet = ClassHelper.getClassSetBySuper(AspectProxy.class);
         for (Class<?> proxyClass : proxyClassSet) {
@@ -74,7 +88,15 @@ public final class AopHelper {
                 proxyMap.put(proxyClass, targetClassSet);
             }
         }
-        return proxyMap;
+    }
+
+    /**
+     * @description 增加事务代理类和目标类的map关系
+     * @date: 2020/9/1
+     */
+    private static void addTransactionProxy(Map<Class<?>, Set<Class<?>>> proxyMap) {
+        Set<Class<?>> serviceClassSet = ClassHelper.getClassSetByAnnotation(Service.class);
+        proxyMap.put(TransactionProxy.class, serviceClassSet);
     }
 
     /**
