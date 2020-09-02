@@ -7,6 +7,7 @@ import site.lgong.framework.bean.Param;
 import site.lgong.framework.helper.BeanHelper;
 import site.lgong.framework.helper.ConfigHelper;
 import site.lgong.framework.helper.ControllerHelper;
+import site.lgong.framework.helper.ServletHelper;
 import site.lgong.framework.utils.CodecUtil;
 import site.lgong.framework.utils.ReflectionUtil;
 import site.lgong.framework.utils.StreamUtil;
@@ -48,43 +49,48 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest requset, HttpServletResponse response) throws ServletException, IOException {
-        //获取请求方法和请求路径
-        String requestMethod = requset.getMethod().toLowerCase();
-        String requestPath = requset.getPathInfo();
-        //获取action处理器
-        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-        if (handler != null) {
-            //获取controller及其bean实例
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controllerBean = BeanHelper.getBean(controllerClass);
-            //创建请求参数对象
-            Map<String, Object> paramMap = new HashMap<>();
-            Enumeration<String> parameterNames = requset.getParameterNames();
-            while (parameterNames.hasMoreElements()) {
-                String paramName = parameterNames.nextElement();
-                String paramValue = requset.getParameter(paramName);
-                paramMap.put(paramName, paramValue);
-            }
-            String body = CodecUtil.decodeURL(StreamUtil.getString(requset.getInputStream()));
-            if (StringUtils.isNotEmpty(body)) {
-                String[] params = StringUtils.splitByWholeSeparator(body, "&");
-                if (ArrayUtils.isNotEmpty(params)) {
-                    for (String param : params) {
-                        String[] array = StringUtils.splitByWholeSeparator(param, "=");
-                        if (ArrayUtils.isNotEmpty(array) && array.length == 2) {
-                            String paramName = array[0];
-                            String paramValue = array[1];
-                            paramMap.put(paramName, paramValue);
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ServletHelper.init(request, response);
+        try {
+            //获取请求方法和请求路径
+            String requestMethod = request.getMethod().toLowerCase();
+            String requestPath = request.getPathInfo();
+            //获取action处理器
+            Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            if (handler != null) {
+                //获取controller及其bean实例
+                Class<?> controllerClass = handler.getControllerClass();
+                Object controllerBean = BeanHelper.getBean(controllerClass);
+                //创建请求参数对象
+                Map<String, Object> paramMap = new HashMap<>();
+                Enumeration<String> parameterNames = request.getParameterNames();
+                while (parameterNames.hasMoreElements()) {
+                    String paramName = parameterNames.nextElement();
+                    String paramValue = request.getParameter(paramName);
+                    paramMap.put(paramName, paramValue);
+                }
+                String body = CodecUtil.decodeURL(StreamUtil.getString(request.getInputStream()));
+                if (StringUtils.isNotEmpty(body)) {
+                    String[] params = StringUtils.splitByWholeSeparator(body, "&");
+                    if (ArrayUtils.isNotEmpty(params)) {
+                        for (String param : params) {
+                            String[] array = StringUtils.splitByWholeSeparator(param, "=");
+                            if (ArrayUtils.isNotEmpty(array) && array.length == 2) {
+                                String paramName = array[0];
+                                String paramValue = array[1];
+                                paramMap.put(paramName, paramValue);
+                            }
                         }
                     }
                 }
+                Param param = new Param(paramMap);
+                //调用action方法
+                Method actionMethod = handler.getActionMethod();
+                Object result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
+                //根据返回值类型View返回jsp页面或者Data返回json数据。。。
             }
-            Param param = new Param(paramMap);
-            //调用action方法
-            Method actionMethod = handler.getActionMethod();
-            Object result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
-            //根据返回值类型View返回jsp页面或者Data返回json数据。。。
+        } finally {
+            ServletHelper.destroy();
         }
     }
 }

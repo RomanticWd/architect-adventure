@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * @author <a href="https://github.com/RomanticWd">RomanticWd</a>
@@ -71,5 +72,75 @@ public final class ServletHelper {
      */
     private static ServletContext getServletContext() {
         return getRequest().getServletContext();
+    }
+
+    /**
+     * @description 将属性放入Request中
+     * @date: 2020/9/2
+     */
+    public static void setRequestAttribute(String key, Object value) {
+        getRequest().setAttribute(key, value);
+    }
+
+    /**
+     * @description 从Request中获取属性
+     * @date: 2020/9/2
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getRequestAttribute(String key) {
+        return (T) getRequest().getAttribute(key);
+    }
+
+    /**
+     * @description 从Request中移除属性
+     * @date: 2020/9/2
+     */
+    public static void removeRequestAttribute(String key) {
+        getRequest().removeAttribute(key);
+    }
+
+    /**
+     * @description 发送重定向响应
+     * @date: 2020/9/2
+     */
+    public static void sendRedirect(String location) {
+        try {
+            getResponse().sendRedirect(getRequest().getContextPath() + location);
+        } catch (IOException e) {
+            log.error("重定向失败", e);
+        }
+    }
+
+    /**
+     * @description 将属性放入session中
+     * @date: 2020/9/2
+     */
+    public static void setSessionAttribute(String key, Object value) {
+        getSession().setAttribute(key, value);
+    }
+
+    /**
+     * @description 从session中获取属性
+     * @date: 2020/9/2
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getSessionAttribute(String key) {
+        return (T) getSession().getAttribute(key);
+    }
+
+    /**
+     * @description 从session中移除属性
+     * @date: 2020/9/2
+     */
+    public static void removeSessionAttribute(String key) {
+        getSession().removeAttribute(key);
+    }
+
+    /**
+     * @description 使session失效
+     * @date: 2020/9/2
+     */
+    public static void invalidateSession() {
+        getSession().invalidate();
     }
 }
