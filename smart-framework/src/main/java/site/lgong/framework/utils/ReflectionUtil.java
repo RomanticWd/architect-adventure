@@ -36,6 +36,16 @@ public final class ReflectionUtil {
 
     /**
      * @return Object
+     * @description 创建实例（根据类名）
+     * @date: 2020/9/21
+     */
+    public static Object newInstance(String className) {
+        Class<?> cls = ClassUtil.loadClass(className);
+        return newInstance(cls);
+    }
+
+    /**
+     * @return Object
      * @description 调用对象的指定方法
      * @date: 2020/7/22
      */

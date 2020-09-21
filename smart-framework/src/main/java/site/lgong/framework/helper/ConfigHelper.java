@@ -71,4 +71,31 @@ public final class ConfigHelper {
     public static String getAppAssetPath() {
         return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_ASSET_PATH);
     }
+
+    /**
+     * @param key
+     * @description 根据属性名获取 String 类型的属性值
+     * @date: 2020/9/21
+     */
+    public static String getString(String key) {
+        return PropsUtil.getString(CONFIG_PROPS, key);
+    }
+
+    /**
+     * @param key
+     * @description 根据属性名获取 int 类型的属性值
+     * @date: 2020/9/21
+     */
+    public static int getInt(String key) {
+        return PropsUtil.getInt(CONFIG_PROPS, key);
+    }
+
+    /**
+     * @param key
+     * @description 根据属性名获取 boolean 类型的属性值
+     * @date: 2020/9/21
+     */
+    public static boolean getBoolean(String key) {
+        return PropsUtil.getBoolean(CONFIG_PROPS, key);
+    }
 }

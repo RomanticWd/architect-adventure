@@ -54,6 +54,15 @@ public final class ClassUtil {
 
     /**
      * @return Set<Class < ?>>
+     * @description 加载类（默认将初始化类）
+     * @date: 2020/7/21
+     */
+    public static Class<?> loadClass(String className) {
+        return loadClass(className, true);
+    }
+
+    /**
+     * @return Set<Class < ?>>
      * @description 获取某个包名下的所有类
      * @date: 2020/7/21
      */
