@@ -1,9 +1,11 @@
 package site.lgong.framework.helper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.dbutils.QueryRunner;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -15,23 +17,28 @@ import java.sql.SQLException;
 public class DatabaseHelper {
 
     //threadLocal可以理解为隔离线程的容器
-    private static final ThreadLocal<Connection> CONNECTION_HOLDER = new ThreadLocal<>();
-    private static final String DRIVER;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
+    private static final ThreadLocal<Connection> CONNECTION_HOLDER;
+    private static final QueryRunner QUERY_RUNNER;
+    private static final BasicDataSource DATA_SOURCE;
 
     static {
-        DRIVER = ConfigHelper.getJdbcDriver();
-        URL = ConfigHelper.getJdbcUrl();
-        USERNAME = ConfigHelper.getJdbcUsername();
-        PASSWORD = ConfigHelper.getJdbcPassword();
 
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            log.error("数据库驱动加载失败", e);
-        }
+        CONNECTION_HOLDER = new ThreadLocal<Connection>();
+
+        QUERY_RUNNER = new QueryRunner();
+
+        DATA_SOURCE = new BasicDataSource();
+        DATA_SOURCE.setDriverClassName(ConfigHelper.getJdbcDriver());
+        DATA_SOURCE.setUrl(ConfigHelper.getJdbcUrl());
+        DATA_SOURCE.setUsername(ConfigHelper.getJdbcUsername());
+        DATA_SOURCE.setPassword(ConfigHelper.getJdbcPassword());
+    }
+
+    /**
+     * 获取数据源
+     */
+    public static DataSource getDataSource() {
+        return DATA_SOURCE;
     }
 
     /**
@@ -42,7 +49,7 @@ public class DatabaseHelper {
         Connection connection = CONNECTION_HOLDER.get();
         if (connection == null) {
             try {
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                connection = DATA_SOURCE.getConnection();
             } catch (SQLException e) {
                 log.error("获取数据库连接失败", e);
             } finally {
