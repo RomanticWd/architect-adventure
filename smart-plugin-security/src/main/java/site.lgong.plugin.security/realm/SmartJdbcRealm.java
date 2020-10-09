@@ -16,6 +16,7 @@ public class SmartJdbcRealm extends JdbcRealm {
         super.setAuthenticationQuery(SecurityConfig.getJdbcAuthQuery());
         super.setUserRolesQuery(SecurityConfig.getJdbcRolesQuery());
         super.setPermissionsQuery(SecurityConfig.getJdbcPermissionQuery());
+        //开启PermissionsLookupEnabled开关后可连接permission表进行查询
         super.setPermissionsLookupEnabled(true);
         super.setCredentialsMatcher(new Md5CredentialsMatcher());
     }

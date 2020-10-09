@@ -165,3 +165,8 @@ public class DBUtil() {
 在子模块的pom.xml文件中引入了smart-framework的jar包，在引入之前需要在smart-framework项目下执行`mvn install`命令安装jar到本地，不然smart-plugin-security的pom文件会报错。
 2. 通过ServletContainerInitializer实现安全框架初始化操作
 在web容器启动时为提供给第三方组件机会做一些初始化的工作，例如注册servlet或者filters等，servlet规范中通过ServletContainerInitializer实现此功能。每个框架要使用ServletContainerInitializer就必须在对应的jar包的META-INF/services 目录创建一个名为javax.servlet.ServletContainerInitializer的文件，文件内容指定具体的ServletContainerInitializer实现类，那么，当web容器启动时就会运行这个初始化器做一些组件内的初始化工作。
+
+### 2020-10-09
+1. 更新framework模块的databaseHelper方法，增加数据源的使用
+2. 增加两个自定义的Realm，SmartJdbcRealm和SmartCustomRealm，前者基于SQL配置的实现，后者用于提供更加灵活的SmartSecurity接口的实现。
+3. SmartCustomRealm实现了AuthorizingRealm方法，覆盖父类的doGetAuthenticationInfo用于认证，覆盖父类的doGetAuthorizationInfo用于授权，这就是常见的Authorization和Authentication的区别。
