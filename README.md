@@ -170,3 +170,7 @@ public class DBUtil() {
 1. 更新framework模块的databaseHelper方法，增加数据源的使用
 2. 增加两个自定义的Realm，SmartJdbcRealm和SmartCustomRealm，前者基于SQL配置的实现，后者用于提供更加灵活的SmartSecurity接口的实现。
 3. SmartCustomRealm实现了AuthorizingRealm方法，覆盖父类的doGetAuthenticationInfo用于认证，覆盖父类的doGetAuthorizationInfo用于授权，这就是常见的Authorization和Authentication的区别。
+
+### 2020-10-12
+1. 基于shiro自定义jsp标签进行权限控制
+2. 继承framework框架中的AspectProxy切面代理抽象类，重写before方法进行前置增强，保证对Controller注解的类进行权限指定的权限校验。
