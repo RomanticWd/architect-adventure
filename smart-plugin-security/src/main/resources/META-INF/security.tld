@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <!--  shiro提供的jsp标签进行重新定义，定义完毕将security.tld放入classpath的META-INF目录下，这样才可以在jsp文件中通过定义标签库的方式引用：
+        <%@ taglib prefix="security" uri="/security" %>
+
+        通过这种方式隐藏shiro的底层实现，同时扩展shiro缺乏的Jsp标签
+    -->
+    <description>Security JSP Tag</description>
+    <tlib-version>1.1</tlib-version>
+    <short-name>security</short-name>
+    <uri>/security</uri>
+
+    <tag>
+        <description>判断当前用户是否已登陆（包括：已认证与已记住）</description>
+        <name>user</name>
+        <tag-class>org.apache.shiro.web.tags.UserTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
+    <tag>
+        <description>判断当前用户是否未登陆（包括：未认证与未记住，即访客身份）</description>
+        <name>guest</name>
+        <tag-class>org.apache.shiro.web.tags.GuestTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
+    <tag>
+        <description>判断当前用户是否拥有其中所有的角色（逗号分割，表示‘与’的关系）</description>
+        <name>hasAllRoles</name>
+        <tag-class>site.lgong.plugin.security.tag.HasAllRolesTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

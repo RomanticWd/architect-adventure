@@ -1,3 +1,17 @@
 /target/
 /smart-concrete/target/
 /smart-framework/target/
+/smart-plugin-security/target/classes/META-INF/services/javax.servlet.ServletContainerInitializer
+/smart-plugin-security/target/classes/META-INF/security.tld
+/smart-plugin-security/target/classes/site/lgong/plugin/security/password/Md5CredentialsMatcher.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/realm/SmartCustomRealm.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/realm/SmartJdbcRealm.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/tag/HasAllRolesTag.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SecurityConfig.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SecurityConstant.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SecurityHelper.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SmartSecurity.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SmartSecurityFilter.class
+/smart-plugin-security/target/classes/site/lgong/plugin/security/SmartSecurityPlugin.class
+/smart-plugin-security/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/smart-plugin-security/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
