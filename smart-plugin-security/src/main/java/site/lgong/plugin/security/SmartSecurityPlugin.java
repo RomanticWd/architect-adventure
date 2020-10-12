@@ -2,6 +2,7 @@ package site.lgong.plugin.security;
 
 import org.apache.shiro.web.env.EnvironmentLoaderListener;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,6 +21,8 @@ public class SmartSecurityPlugin implements ServletContainerInitializer {
         //注册Listener
         servletContext.addListener(EnvironmentLoaderListener.class);
         //注册Filter
-        servletContext.addFilter("SmartSecurityFilter", smarts)
+        FilterRegistration.Dynamic smartSecurityFilter = servletContext.
+                addFilter("SmartSecurityFilter", SmartSecurityFilter.class);
+        smartSecurityFilter.addMappingForUrlPatterns(null, false, "/*");
     }
 }
